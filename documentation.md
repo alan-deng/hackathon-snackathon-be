@@ -1,5 +1,9 @@
 # Endpoints
 
+Base URL: 
+
+https://hackathon-snackathon.herokuapp.com
+
 ### `Show`
 /recipes/:id (GET)
 
