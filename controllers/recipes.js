@@ -16,10 +16,7 @@ recipesRouter.get("/:id", async (req, res) => {
 // endpoint for getting a random recipe based on filters
 recipesRouter.get("/random", async (req, res) => {
   try {
-    const recipeArr = await Recipe
-      .find
-      //   insert user inputted filters here
-      ();
+    const recipeArr = await Recipe.find(); //   insert user inputted filters here
     const recommendRecipe = (recipes) => {
       //   insert data science people's recommendation engine here
     };
