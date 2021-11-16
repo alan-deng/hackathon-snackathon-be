@@ -13,6 +13,24 @@ recipesRouter.get("/:id", async (req, res) => {
   }
 });
 
+// endpoint for getting a random recipe based on filters
+recipesRouter.get("/random", async (req, res) => {
+  try {
+    const recipeArr = await Recipe
+      .find
+      //   insert user inputted filters here
+      ();
+    const recommendRecipe = (recipes) => {
+      //   insert data science people's recommendation engine here
+    };
+
+    const recipe = recommendRecipe(recipeArr);
+    res.status(200).json(recipe);
+  } catch {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // new recipe post
 recipesRouter.post("/", async (req, res) => {
   try {
