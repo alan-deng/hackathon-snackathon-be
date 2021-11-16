@@ -10,9 +10,16 @@ Response: Returns the recipe specified in params
 ### `Random Recipe`
 /recipes/random (GET)
 
+Request body: N/A
+
+Response: Returns a single random recipe
+
+### `Filtered Recipe`
+/recipes/filtered (GET)
+
 Request body: User inputted filters
 
-Response: Returns a single random recipe that meets the user's filters, using our recommendation engine
+Response: Returns a single recipe that meets the user's filters, using our recommendation engine
 
 ### `New Recipe`
 /recipes (POST)

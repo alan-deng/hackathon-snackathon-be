@@ -3,27 +3,40 @@ const Recipe = require("../models/recipes");
 
 // index route never exists, we dont have the functionality
 
-// endpoint for getting a specific recipe for show/edit pages
-recipesRouter.get("/:id", async (req, res) => {
+// endpoint for getting a random recipe based on filters
+recipesRouter.get("/random", async (req, res) => {
   try {
-    const recipe = await Recipe.findById(req.params.id);
+    const recipeArr = await Recipe.find();
+    const randomArrNum = Math.floor(Math.random() * recipeArr.length);
+    const recipe = recipeArr[randomArrNum];
     res.status(200).json(recipe);
-  } catch {
+  } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });
 
-// endpoint for getting a random recipe based on filters
-recipesRouter.get("/random", async (req, res) => {
+// get recipe based on chosen filters
+recipesRouter.get("/filtered", async (req, res) => {
   try {
     const recipeArr = await Recipe.find(); //   insert user inputted filters here
     const recommendRecipe = (recipes) => {
       //   insert data science people's recommendation engine here
+      return recipes;
     };
 
     const recipe = recommendRecipe(recipeArr);
     res.status(200).json(recipe);
-  } catch {
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// endpoint for getting a specific recipe
+recipesRouter.get("/:id", async (req, res) => {
+  try {
+    const recipe = await Recipe.findById(req.params.id);
+    res.status(200).json(recipe);
+  } catch (err) {
     res.status(400).json({ error: err.message });
   }
 });

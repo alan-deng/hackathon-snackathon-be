@@ -17,6 +17,7 @@ mongoose.connect(mongodbURI, {
 
 app.use(
   session({
+    secret: "secret",
     resave: false,
     saveUninitialized: true,
     cookie: {
