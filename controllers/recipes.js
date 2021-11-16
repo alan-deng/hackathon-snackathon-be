@@ -15,16 +15,35 @@ recipesRouter.get("/:id", async (req, res) => {
 
 // new recipe post
 recipesRouter.post("/", async (req, res) => {
-  res.send("create page working");
+  try {
+    const createdRecipe = await Recipe.create(req.body);
+    res.status(200).json(createdRecipe);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // update
 recipesRouter.put("/:id", async (req, res) => {
-  res.send("update page working");
+  try {
+    const updatedRecipe = await Recipe.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(updatedRecipe);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // delete
-recipesRouter.delete("/", async (req, res) => {
-  res.send("delete page working");
+recipesRouter.delete("/:id", async (req, res) => {
+  try {
+    const deletedRecipe = await Recipe.findByIdAndRemove(req.params.id);
+    res.status(200).json(deletedRecipe);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 module.exports = recipesRouter;
