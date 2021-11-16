@@ -8,6 +8,7 @@ const methodOverride = require("method-override");
 const session = require("express-session");
 const mongoose = require("mongoose");
 const recipesRouter = require("./controllers/recipes");
+const Recipe = require("./models/recipes");
 
 //===============Middleware===================
 mongoose.connect(mongodbURI, {
@@ -30,5 +31,34 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use("/recipes", recipesRouter);
+
+// ============= dummy data creation script =======
+const createRecipe = async (name, ingredients, description = "DNE") => {
+  await Recipe.create({
+    name,
+    ingredients,
+    description,
+  });
+};
+
+Recipe.find({}, (err, foundRecipe) => {
+  if (foundRecipe.length == 0) {
+    createRecipe(
+      "grannyCake 1",
+      [{ name: "chocolate", amount: "1 oz" }],
+      "yummy"
+    );
+    createRecipe("grannyCake 2", [{ name: "flour", amount: "2 oz" }], "yummy");
+    createRecipe("grannyCake 3", [{ name: "cheese", amount: "3 oz" }], "yummy");
+    createRecipe(
+      "grannyCake 4",
+      [
+        { name: "chocolate", amount: "4 oz" },
+        { name: "cake", amount: "all of it" },
+      ],
+      "yummy"
+    );
+  }
+});
 
 app.listen(PORT);
