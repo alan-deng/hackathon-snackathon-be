@@ -14,12 +14,43 @@ recipesRouter.get("/random", async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
 // get recipe based on chosen filters
-recipesRouter.get("/filtered", async (req, res) => {
+recipesRouter.post("/filtered", async (req, res) => {
   try {
-    const recipeArr = await Recipe.find(); //   insert user inputted filters here
+    // console.log(req.body);
+    const filtersObj = { $and: [] };
+    if (req.body.holiday) {
+      filtersObj["$and"].push({ [req.body.holiday]: "1" });
+    }
+    if (req.body.meal) {
+      filtersObj["$and"].push({ [req.body.meal]: "1" });
+    }
+    if (req.body.time) {
+      // totalhours displays hours if minutes has time
+      switch (req.body.time) {
+        case "30 Minutes":
+          filtersObj["$and"].push({ totalhours: "30" });
+          break;
+        case "1 Hour":
+          filtersObj["$and"].push({ totalhours: "1" });
+          filtersObj["$and"].push({ totalminutes: null });
+          break;
+        case "1 Hour 30 Minutes":
+          filtersObj["$and"].push({ totalhours: "1" });
+          filtersObj["$and"].push({ totalminutes: "30" });
+          break;
+        case "2 or More Hours":
+          filtersObj["$and"].push({ totalhours: { $gte: 2 } });
+          break;
+      }
+      // console.log(filtersObj);
+    }
+    const testFilter = {
+      $and: [{ christmas: "1" }, { dinner: "1" }],
+    };
+    const recipeArr = await Recipe.find(filtersObj); //   insert user inputted filters here
     const recommendRecipe = (recipes) => {
+      // console.log(recipeArr);
       const randomArrNum = Math.floor(Math.random() * recipes.length);
       const recipe = recipes[randomArrNum];
       return recipe;

@@ -10,14 +10,13 @@ const session = require("express-session");
 const mongoose = require("mongoose");
 const recipesRouter = require("./controllers/recipes");
 const Recipe = require("./models/recipes");
-
+var bodyParser = require("body-parser");
 //===============Middleware===================
 mongoose.connect(mongodbURI, {
   useNewUrlParser: true,
 });
 
 const whiteList = [];
-
 const corsOptions = {
   origin: (origin, callback) => {
     if (whiteList.indexOf(origin) != -1 || 1 === 1) {
@@ -42,28 +41,33 @@ app.use(
 
 app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 //   static files in public folder
 app.use(express.static("public"));
 
 app.use("/recipes", recipesRouter);
 
 // ===============data initialization script=====================
-const recipes = require("./recipes.js");
+const recipes = require("./about50k.js");
+let validRecipe = 0,
+  totalRecipe = 0;
 const recipeCreator = (recipes) => {
   for (const recipe of recipes) {
     if (
       recipe.recipeingredientquantities.length ===
-        recipe.recipeingredientparts.length &&
-      recipe.images.startsWith('"https')
+      recipe.recipeingredientparts.length
     ) {
-      recipe.images = recipe.images.replace('"', "");
-      recipe.images = recipe.images.replace('"', "");
       Recipe.create(recipe);
+      validRecipe++;
     }
+    totalRecipe++;
   }
+  console.log(validRecipe);
+  console.log(totalRecipe);
 };
+// recipeCreator(recipes);
 Recipe.find({}, (err, foundRecipe) => {
-  if (foundRecipe.length == 0) {
+  if (foundRecipe.length === 0) {
     recipeCreator(recipes);
   }
 });
