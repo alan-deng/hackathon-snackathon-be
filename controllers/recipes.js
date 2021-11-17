@@ -20,8 +20,9 @@ recipesRouter.get("/filtered", async (req, res) => {
   try {
     const recipeArr = await Recipe.find(); //   insert user inputted filters here
     const recommendRecipe = (recipes) => {
-      //   insert data science people's recommendation engine here
-      return recipes;
+      const randomArrNum = Math.floor(Math.random() * recipes.length);
+      const recipe = recipes[randomArrNum];
+      return recipe;
     };
 
     const recipe = recommendRecipe(recipeArr);
