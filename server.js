@@ -47,32 +47,21 @@ app.use(express.static("public"));
 
 app.use("/recipes", recipesRouter);
 
-// ============= dummy data creation script =======
-const createRecipe = async (name, ingredients, description = "DNE") => {
-  await Recipe.create({
-    name,
-    ingredients,
-    description,
-  });
+// ===============data initialization script=====================
+const recipes = require("./recipes.js");
+const recipeCreator = (recipes) => {
+  for (const recipe of recipes) {
+    if (
+      recipe.recipeingredientquantities.length ===
+      recipe.recipeingredientparts.length
+    ) {
+      Recipe.create(recipe);
+    }
+  }
 };
-
 Recipe.find({}, (err, foundRecipe) => {
   if (foundRecipe.length == 0) {
-    createRecipe(
-      "grannyCake 1",
-      [{ name: "chocolate", amount: "1 oz" }],
-      "yummy"
-    );
-    createRecipe("grannyCake 2", [{ name: "flour", amount: "2 oz" }], "yummy");
-    createRecipe("grannyCake 3", [{ name: "cheese", amount: "3 oz" }], "yummy");
-    createRecipe(
-      "grannyCake 4",
-      [
-        { name: "chocolate", amount: "4 oz" },
-        { name: "cake", amount: "all of it" },
-      ],
-      "yummy"
-    );
+    recipeCreator(recipes);
   }
 });
 
