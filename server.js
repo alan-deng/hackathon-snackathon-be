@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const PORT = process.env.PORT || 9000;
 const mongodbURI =
   process.env.MONGODBURI || "mongodb://localhost:27017/hackathon-snackathon";
@@ -14,6 +15,17 @@ const Recipe = require("./models/recipes");
 mongoose.connect(mongodbURI, {
   useNewUrlParser: true,
 });
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (whiteList.indexOf(origin) != -1 || 1 === 1) {
+      //REMOVE 1==1 after done testing!
+      callback(null, true);
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 
 app.use(
   session({
