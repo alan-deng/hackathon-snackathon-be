@@ -53,8 +53,11 @@ const recipeCreator = (recipes) => {
   for (const recipe of recipes) {
     if (
       recipe.recipeingredientquantities.length ===
-      recipe.recipeingredientparts.length
+        recipe.recipeingredientparts.length &&
+      recipe.images.startsWith('"https')
     ) {
+      recipe.images = recipe.images.replace('"', "");
+      recipe.images = recipe.images.replace('"', "");
       Recipe.create(recipe);
     }
   }
